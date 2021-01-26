@@ -6,7 +6,7 @@ public class ArrayStorage {
     int head = 0;                               // Позиция для вставки нового элемента
 
     void clear() {
-        for (int i = 0; i < storage.length && storage[i] != null; i++) {
+        for (int i = 0; i < head; i++) {
             storage[i] = null;
         }
         head = 0;
