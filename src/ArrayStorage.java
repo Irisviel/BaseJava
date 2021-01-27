@@ -3,7 +3,9 @@
  */
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
-    int head = 0;                               // Позиция для вставки нового элемента
+
+    // Позиция для вставки нового элемента
+    int head = 0;
 
     void clear() {
         for (int i = 0; i < head; i++) {
@@ -23,26 +25,27 @@ public class ArrayStorage {
     Resume get(String uuid) {
         if (uuid == null) return null;
 
-        Resume result = null;
-        for (int i = 0; i < head && result == null; i++) {
+        for (int i = 0; i < head; i++) {
             if (uuid.equals(storage[i].uuid)) {
-                result = storage[i];
+                return storage[i];
             }
         }
-        return result;
+        return null;
     }
 
     void delete(String uuid) {
         if (uuid == null) return;
 
         int indexToDelete = -1;
-        for (int i = 0; i < head && indexToDelete == -1; i++) {
-            if (uuid.equals(storage[i].uuid))
+        for (int i = 0; i < head; i++) {
+            if (uuid.equals(storage[i].uuid)) {
                 indexToDelete = i;
+                break;
+            }
         }
 
         if (indexToDelete != -1) {
-            System.arraycopy(storage, indexToDelete + 1, storage, indexToDelete, storage.length - 1 - indexToDelete);
+            System.arraycopy(storage, indexToDelete + 1, storage, indexToDelete, head - 1 - indexToDelete);
             head--;
         }
     }
