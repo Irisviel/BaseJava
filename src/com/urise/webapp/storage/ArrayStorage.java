@@ -45,12 +45,12 @@ public class ArrayStorage {
     public Resume get(String uuid) {
         if (uuid == null) return null;
 
-        for (int i = 0; i < size; i++) {
-            if (uuid.equals(storage[i].uuid())) {
-                return storage[i];
-            }
+        int index = getIndex(uuid);
+        if (index == -1) {
+            System.out.println("No resume with uuid: " + uuid);
+            return null;
         }
-        return null;
+        return storage[index];
     }
 
     public void delete(String uuid) {
