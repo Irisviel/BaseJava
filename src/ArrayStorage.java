@@ -5,13 +5,13 @@ public class ArrayStorage {
     Resume[] storage = new Resume[10000];
 
     // Позиция для вставки нового элемента
-    int head = 0;
+    int size = 0;
 
     void clear() {
-        for (int i = 0; i < head; i++) {
+        for (int i = 0; i < size; i++) {
             storage[i] = null;
         }
-        head = 0;
+        size = 0;
     }
 
     void update(Resume r) {
@@ -25,17 +25,17 @@ public class ArrayStorage {
 
     void save(Resume r) {
         if (r == null) return;
-        if (head >= storage.length) return;
+        if (size >= storage.length) return;
         if (indexOf(r) != -1) return;
 
-        storage[head] = r;
-        head++;
+        storage[size] = r;
+        size++;
     }
 
     Resume get(String uuid) {
         if (uuid == null) return null;
 
-        for (int i = 0; i < head; i++) {
+        for (int i = 0; i < size; i++) {
             if (uuid.equals(storage[i].uuid)) {
                 return storage[i];
             }
@@ -47,7 +47,7 @@ public class ArrayStorage {
         if (uuid == null) return;
 
         int indexToDelete = -1;
-        for (int i = 0; i < head; i++) {
+        for (int i = 0; i < size; i++) {
             if (uuid.equals(storage[i].uuid)) {
                 indexToDelete = i;
                 break;
@@ -55,14 +55,14 @@ public class ArrayStorage {
         }
 
         if (indexToDelete != -1) {
-            storage[indexToDelete] = storage[head - 1];
-            storage[head] = null;
-            head--;
+            storage[indexToDelete] = storage[size - 1];
+            storage[size] = null;
+            size--;
         }
     }
 
     int indexOf(Resume r) {
-        for (int i = 0; i < head; i++) {
+        for (int i = 0; i < size; i++) {
             if (r.uuid.equals(storage[i].uuid)) {
                 return i;
             }
@@ -74,12 +74,12 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        Resume[] result = new Resume[head];
-        System.arraycopy(storage, 0, result, 0, head);
+        Resume[] result = new Resume[size];
+        System.arraycopy(storage, 0, result, 0, size);
         return result;
     }
 
     int size() {
-        return head;
+        return size;
     }
 }
