@@ -23,7 +23,7 @@ public class ArrayStorage {
 
         int indexToUpdate = getIndex(resume.uuid());
         if (indexToUpdate == -1) {
-            System.out.println("ERROR: No resume with uuid: {0}" + resume.uuid());
+            System.out.println("No resume with uuid: " + resume.uuid());
             return;
         }
 
@@ -34,7 +34,7 @@ public class ArrayStorage {
         if (resume == null) return;
         if (size >= storage.length) return;
         if (getIndex(resume.uuid()) != -1) {
-            System.out.println("ERROR: No resume with uuid: {0}" + resume.uuid());
+            System.out.println("Resume with uuid " + resume.uuid() + " already exists.");
             return;
         };
 
@@ -58,12 +58,12 @@ public class ArrayStorage {
 
         int indexToDelete = getIndex(uuid);
 
-        if (indexToDelete != -1) {
+        if (indexToDelete == -1) {
+            System.out.println("No resume with uuid: " + uuid);
+        } else {
             storage[indexToDelete] = storage[size - 1];
             storage[size] = null;
             size--;
-        } else {
-            System.out.println("ERROR: No resume with uuid: {0}" + uuid);
         }
     }
 
