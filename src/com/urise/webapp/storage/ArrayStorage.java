@@ -62,7 +62,7 @@ public class ArrayStorage {
             System.out.println("No resume with uuid: " + uuid);
         } else {
             storage[indexToDelete] = storage[size - 1];
-            storage[size] = null;
+            storage[size - 1] = null;
             size--;
         }
     }
