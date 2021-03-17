@@ -14,9 +14,19 @@ public class ArrayStorage {
         head = 0;
     }
 
+    void update(Resume r) {
+        if (r == null) return;
+
+        int indexToUpdate = indexOf(r);
+        if (indexToUpdate == -1) return;
+
+        storage[indexToUpdate] = r;
+    }
+
     void save(Resume r) {
         if (r == null) return;
         if (head >= storage.length) return;
+        if (indexOf(r) != -1) return;
 
         storage[head] = r;
         head++;
@@ -45,9 +55,19 @@ public class ArrayStorage {
         }
 
         if (indexToDelete != -1) {
-            System.arraycopy(storage, indexToDelete + 1, storage, indexToDelete, head - 1 - indexToDelete);
+            storage[indexToDelete] = storage[head - 1];
+            storage[head] = null;
             head--;
         }
+    }
+
+    int indexOf(Resume r) {
+        for (int i = 0; i < head; i++) {
+            if (r.uuid.equals(storage[i].uuid)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     /**
