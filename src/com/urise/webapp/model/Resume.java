@@ -6,7 +6,22 @@ package com.urise.webapp.model;
 public class Resume {
 
     // Unique identifier
-    public String uuid;
+    private String uuid;
+
+    public String uuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public Resume() {
+    }
+
+    public Resume(String uuid) {
+        this.uuid = uuid;
+    }
 
     @Override
     public String toString() {

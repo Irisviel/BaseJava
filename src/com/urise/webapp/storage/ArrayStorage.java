@@ -6,9 +6,9 @@ import com.urise.webapp.model.Resume;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    private Resume[] storage = new Resume[10000];
+    private Resume[] storage = new Resume[10_000];
 
-    // Позиция для вставки нового элемента
+    // Количество резюме
     private int size = 0;
 
     public void clear() {
@@ -18,21 +18,27 @@ public class ArrayStorage {
         size = 0;
     }
 
-    public void update(Resume r) {
-        if (r == null) return;
+    public void update(Resume resume) {
+        if (resume == null) return;
 
-        int indexToUpdate = indexOf(r);
-        if (indexToUpdate == -1) return;
+        int indexToUpdate = getIndex(resume.uuid());
+        if (indexToUpdate == -1) {
+            System.out.println("ERROR: No resume with uuid: {0}" + resume.uuid());
+            return;
+        }
 
-        storage[indexToUpdate] = r;
+        storage[indexToUpdate] = resume;
     }
 
-    public void save(Resume r) {
-        if (r == null) return;
+    public void save(Resume resume) {
+        if (resume == null) return;
         if (size >= storage.length) return;
-        if (indexOf(r) != -1) return;
+        if (getIndex(resume.uuid()) != -1) {
+            System.out.println("ERROR: No resume with uuid: {0}" + resume.uuid());
+            return;
+        };
 
-        storage[size] = r;
+        storage[size] = resume;
         size++;
     }
 
@@ -40,7 +46,7 @@ public class ArrayStorage {
         if (uuid == null) return null;
 
         for (int i = 0; i < size; i++) {
-            if (uuid.equals(storage[i].uuid)) {
+            if (uuid.equals(storage[i].uuid())) {
                 return storage[i];
             }
         }
@@ -50,24 +56,20 @@ public class ArrayStorage {
     public void delete(String uuid) {
         if (uuid == null) return;
 
-        int indexToDelete = -1;
-        for (int i = 0; i < size; i++) {
-            if (uuid.equals(storage[i].uuid)) {
-                indexToDelete = i;
-                break;
-            }
-        }
+        int indexToDelete = getIndex(uuid);
 
         if (indexToDelete != -1) {
             storage[indexToDelete] = storage[size - 1];
             storage[size] = null;
             size--;
+        } else {
+            System.out.println("ERROR: No resume with uuid: {0}" + uuid);
         }
     }
 
-    public int indexOf(Resume r) {
+    private int getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (r.uuid.equals(storage[i].uuid)) {
+            if (uuid.equals(storage[i].uuid())) {
                 return i;
             }
         }
