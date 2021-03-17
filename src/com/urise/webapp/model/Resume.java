@@ -12,7 +12,7 @@ public class Resume {
         this.uuid = uuid;
     }
 
-    public String uuid() {
+    public String getUuid() {
         return uuid;
     }
 
