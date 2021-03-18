@@ -69,11 +69,11 @@ public abstract class AbstractArrayStorage implements Storage {
         int indexToDelete = getIndex(uuid);
         if (indexToDelete < 0) {
             throw new NotExistStorageException(uuid);
-        } else {
-            fillDeletedElement(indexToDelete);
-            storage[size - 1] = null;
-            size--;
         }
+
+        fillDeletedElement(indexToDelete);
+        storage[size - 1] = null;
+        size--;
     }
 
     /**
