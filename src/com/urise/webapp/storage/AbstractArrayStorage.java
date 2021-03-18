@@ -42,7 +42,7 @@ public abstract class AbstractArrayStorage implements Storage {
             System.out.println("Storage overflow.");
             return;
         }
-        if (indexToSave != -1) {
+        if (indexToSave >= 0) {
             System.out.println("Resume with uuid " + resume.getUuid() + " already exists.");
             return;
         };
