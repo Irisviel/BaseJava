@@ -70,11 +70,11 @@ public abstract class AbstractArrayStorage implements Storage {
 
         if (indexToDelete == -1) {
             System.out.println("No resume with uuid: " + uuid);
-        } else {
-            fillDeletedElement(indexToDelete);
-            storage[size - 1] = null;
-            size--;
         }
+
+        fillDeletedElement(indexToDelete);
+        storage[size - 1] = null;
+        size--;
     }
 
     /**
