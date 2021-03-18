@@ -32,11 +32,15 @@ public class ArrayStorage {
 
     public void save(Resume resume) {
         if (resume == null) return;
-        if (size >= storage.length) return;
+
+        if (size >= storage.length) {
+            System.out.println("Storage overflow.");
+            return;
+        }
         if (getIndex(resume.uuid()) != -1) {
             System.out.println("Resume with uuid " + resume.uuid() + " already exists.");
             return;
-        };
+        }
 
         storage[size] = resume;
         size++;
@@ -57,9 +61,9 @@ public class ArrayStorage {
         if (uuid == null) return;
 
         int indexToDelete = getIndex(uuid);
-
         if (indexToDelete == -1) {
             System.out.println("No resume with uuid: " + uuid);
+            return;
         } else {
             storage[indexToDelete] = storage[size - 1];
             storage[size - 1] = null;
@@ -80,9 +84,9 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     public Resume[] getAll() {
-        Resume[] result = new Resume[size];
-        System.arraycopy(storage, 0, result, 0, size);
-        return result;
+        Resume[] allResume = new Resume[size];
+        System.arraycopy(storage, 0, allResume, 0, size);
+        return allResume;
     }
 
     public int size() {
