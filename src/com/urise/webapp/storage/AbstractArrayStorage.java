@@ -1,5 +1,8 @@
 package com.urise.webapp.storage;
 
+import com.urise.webapp.exception.ExistStorageException;
+import com.urise.webapp.exception.NotExistStorageException;
+import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
@@ -27,8 +30,7 @@ public abstract class AbstractArrayStorage implements Storage {
 
         int indexToUpdate = getIndex(resume.getUuid());
         if (indexToUpdate == -1) {
-            System.out.println("No resume with uuid: " + resume.getUuid());
-            return;
+            throw new NotExistStorageException(resume.getUuid());
         }
 
         storage[indexToUpdate] = resume;
@@ -39,12 +41,10 @@ public abstract class AbstractArrayStorage implements Storage {
         if (resume == null) return;
         int indexToSave = getIndex(resume.getUuid());
         if (size >= STORAGE_LIMIT) {
-            System.out.println("Storage overflow.");
-            return;
+            throw new StorageException("Storage overflow.", resume.getUuid());
         }
         if (indexToSave >= 0) {
-            System.out.println("Resume with uuid " + resume.getUuid() + " already exists.");
-            return;
+            throw new ExistStorageException(resume.getUuid());
         };
         insertElement(resume, indexToSave);
         size++;
@@ -56,8 +56,7 @@ public abstract class AbstractArrayStorage implements Storage {
 
         int index = getIndex(uuid);
         if (index == -1) {
-            System.out.println("No resume with uuid: " + uuid);
-            return null;
+            throw new NotExistStorageException(uuid);
         }
         return storage[index];
     }
@@ -68,8 +67,8 @@ public abstract class AbstractArrayStorage implements Storage {
 
         int indexToDelete = getIndex(uuid);
 
-        if (indexToDelete == -1) {
-            System.out.println("No resume with uuid: " + uuid);
+        if (indexToDelete < 0) {
+            throw new NotExistStorageException(uuid);
         } else {
             fillDeletedElement(indexToDelete);
             storage[size - 1] = null;
