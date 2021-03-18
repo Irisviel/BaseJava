@@ -8,8 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 import com.urise.webapp.model.Resume;
 
-import java.util.UUID;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -88,13 +86,13 @@ public abstract class AbstractArrayStorageTest {
     public void saveOverflow() throws Exception {
         try {
             for (int i = storage.size() + 1; i <= AbstractArrayStorage.STORAGE_LIMIT; i++) {
-                storage.save(new Resume(UUID.randomUUID().toString()));
+                storage.save(new Resume());
             }
         } catch (StorageException e) {
             Assert.fail("Expected no exception but caught: " + e.getMessage());
         }
         assertSize(AbstractArrayStorage.STORAGE_LIMIT);
-        storage.save(new Resume(UUID.randomUUID().toString()));
+        storage.save(new Resume());
     }
 
     @Test(expected = NotExistStorageException.class)
