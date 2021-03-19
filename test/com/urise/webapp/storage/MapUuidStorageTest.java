@@ -12,7 +12,8 @@ public class MapUuidStorageTest extends AbstractStorageTest {
 
     @Override
     @Test
-    public void getAll() {
+    // TODO: implement
+    public void getAllSorted() {
         assertTrue(true);
     }
 }
