@@ -12,7 +12,7 @@ public class ListStorageTest extends AbstractStorageTest {
 
     @Override
     @Test
-    public void saveOverflow() throws Exception {
+    public void saveOverflow() {
         assertTrue(true);
     }
 }
