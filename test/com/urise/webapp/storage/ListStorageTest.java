@@ -9,10 +9,4 @@ public class ListStorageTest extends AbstractStorageTest {
     public ListStorageTest() {
         super(new ListStorage());
     }
-
-    @Override
-    @Test
-    public void saveOverflow() {
-        assertTrue(true);
-    }
 }

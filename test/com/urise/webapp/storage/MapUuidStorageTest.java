@@ -15,10 +15,4 @@ public class MapUuidStorageTest extends AbstractStorageTest {
     public void getAll() {
         assertTrue(true);
     }
-
-    @Override
-    @Test
-    public void saveOverflow() {
-        assertTrue(true);
-    }
 }
