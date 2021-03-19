@@ -17,6 +17,7 @@ public class Resume implements Comparable<Resume> {
         this(UUID.randomUUID().toString(), fullName);
     }
 
+    // TODO: remove
     public Resume(String uuid, String fullName) {
         Objects.requireNonNull(uuid, "uuid must not be null");
         Objects.requireNonNull(fullName, "fullName must not be null");
