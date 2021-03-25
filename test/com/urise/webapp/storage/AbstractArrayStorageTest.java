@@ -17,9 +17,8 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
                 storage.save(new Resume("Name" + i));
             }
         } catch (StorageException e) {
-            Assert.fail();
+            Assert.fail("Expected no exception during storage populating but got: " + e.getMessage());
         }
-        assertSize(10_000);
         storage.save(new Resume("Overflow"));
     }
 }
