@@ -38,6 +38,10 @@ public class Resume implements Comparable<Resume> {
         return contacts;
     }
 
+    public Map<SectionType, Section> getSections() {
+        return sections;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
