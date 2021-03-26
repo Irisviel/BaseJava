@@ -33,6 +33,10 @@ public class Resume implements Comparable<Resume> {
         return uuid;
     }
 
+    public Map<ContactType, String> getContacts() {
+        return contacts;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
