@@ -1,21 +1,37 @@
 package com.urise.webapp.model;
 
+import java.util.List;
+import java.util.Objects;
+
 public class ListSection extends Section {
-    public ListSection() {
+    private final List<String> items;
+
+    public ListSection(List<String> items) {
+        Objects.requireNonNull(items, "items must not be null");
+        this.items = items;
+    }
+
+    public List<String> getItems() {
+        return items;
     }
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return items.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        return super.equals(obj);
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        ListSection that = (ListSection) obj;
+
+        return items.equals(that.items);
     }
 
     @Override
     public String toString() {
-        return super.toString();
+        return items.toString();
     }
 }

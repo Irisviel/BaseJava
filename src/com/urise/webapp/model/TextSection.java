@@ -1,21 +1,36 @@
 package com.urise.webapp.model;
 
+import java.util.Objects;
+
 public class TextSection extends Section {
-    public TextSection() {
+    private final String content;
+
+    public TextSection(String content) {
+        Objects.requireNonNull(content, "content must not be null");
+        this.content = content;
+    }
+
+    public String getContent() {
+        return content;
     }
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return content.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        return super.equals(obj);
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        TextSection that = (TextSection) obj;
+
+        return content.equals(that.content);
     }
 
     @Override
     public String toString() {
-        return super.toString();
+        return content;
     }
 }
