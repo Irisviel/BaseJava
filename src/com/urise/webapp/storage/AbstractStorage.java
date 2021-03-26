@@ -62,7 +62,7 @@ public abstract class AbstractStorage implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         List<Resume> actualResumes = doCopyAll();
-        Collections.sort(actualResumes);
+        actualResumes.sort(null);
         return actualResumes;
     }
 }
