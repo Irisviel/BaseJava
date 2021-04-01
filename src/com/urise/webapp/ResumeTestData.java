@@ -2,8 +2,9 @@ package com.urise.webapp;
 
 import com.urise.webapp.model.*;
 
-import java.time.LocalDate;
+import java.time.Month;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 
 public class ResumeTestData {
@@ -25,21 +26,18 @@ public class ResumeTestData {
         resume.addSection(SectionType.QUALIFICATIONS, new ListSection(Arrays.asList("Qualification1", "Qualification2")));
 
         Organization organizationWork = new Organization(
-                "OrganizationName",
-                "OrganizationUrl",
-                LocalDate.of(2005,01,01),
-                LocalDate.of(2005,06,01),
-                "OrganizationTitle",
-                "OrganizationDescription");
+                new Link("linkName", "linkUrl"),
+                Arrays.asList(
+                        new Organization.Position(2003, Month.JANUARY, 2004, Month.JULY, "WorkFirst", "Description1"),
+                        new Organization.Position(2004, Month.SEPTEMBER, "WorkSecond", "Description2")
+                ));
         resume.addSection(SectionType.EXPERIENCE, new OrganizationSection(Arrays.asList(organizationWork)));
 
         Organization organizationEdu = new Organization(
-                "OrganizationEduName",
-                "OrganizationEduUrl",
-                LocalDate.of(2003,01,01),
-                LocalDate.of(2004,12,01),
-                "OrganizationEduTitle",
-                "OrganizationEduDescription");
+                new Link("linkEduName", "linkEduUrl"),
+                Collections.singletonList(
+                        new Organization.Position(2002, Month.JANUARY, 2002, Month.DECEMBER, "PositionTitle", "PositionDescription")
+                ));
         resume.addSection(SectionType.EDUCATION, new OrganizationSection(Arrays.asList(organizationEdu)));
 
         printAll(resume);
