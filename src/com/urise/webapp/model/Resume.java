@@ -58,15 +58,15 @@ public class Resume implements Comparable<Resume> {
 
         Resume resume = (Resume) o;
 
-        return uuid.equals(resume.uuid) &&
-                fullName.equals(resume.fullName);
+        return Objects.equals(uuid, resume.uuid) &&
+                Objects.equals(fullName, resume.fullName) &&
+                Objects.equals(contacts, resume.contacts) &&
+                Objects.equals(sections, resume.sections);
     }
 
     @Override
     public int hashCode() {
-        int hash = uuid.hashCode();
-        hash = 31 * hash + fullName.hashCode();
-        return hash;
+        return Objects.hash(uuid, fullName, contacts, sections);
     }
 
     @Override
