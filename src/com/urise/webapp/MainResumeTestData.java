@@ -19,7 +19,7 @@ public class MainResumeTestData {
         for (Map.Entry<ContactType, String> contact : resume.getContacts().entrySet()) {
             System.out.println(contact.getKey().getTitle() + ": " + contact.getValue());
         }
-        for (Map.Entry<SectionType, Section> section : resume.getSections().entrySet()) {
+        for (Map.Entry<SectionType, AbstractSection> section : resume.getSections().entrySet()) {
             System.out.println(section.getKey().getTitle() + ": " + section.getValue());
         }
     }
