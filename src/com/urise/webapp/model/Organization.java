@@ -2,7 +2,6 @@ package com.urise.webapp.model;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -10,7 +9,7 @@ import static com.urise.webapp.util.DateUtil.of;
 
 public class Organization {
     private final Link homePage;
-    private List<Position> positions = new ArrayList<>();
+    private List<Position> positions;
 
     public Organization(Link homePage, List<Position> positions) {
         this.homePage = homePage;
