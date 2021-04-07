@@ -10,12 +10,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class AbstractFileStorage extends AbstractStorage<File> {
+public class FileStorage extends AbstractStorage<File> {
     private File directory;
 
     private StreamSerializer streamSerializer;
 
-    protected AbstractFileStorage(File directory, StreamSerializer streamSerializer) {
+    protected FileStorage(File directory, StreamSerializer streamSerializer) {
         Objects.requireNonNull(directory, "directory must not be null");
 
         this.streamSerializer = streamSerializer;
