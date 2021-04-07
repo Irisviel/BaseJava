@@ -2,6 +2,7 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
+import com.urise.webapp.storage.serializer.StreamSerializer;
 
 import java.io.*;
 import java.util.Arrays;
@@ -9,15 +10,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public abstract class AbstractFileStorage extends AbstractStorage<File> {
+public class AbstractFileStorage extends AbstractStorage<File> {
     private File directory;
 
-    protected abstract void doWrite(Resume resume, OutputStream os) throws IOException;
+    private StreamSerializer streamSerializer;
 
-    protected abstract Resume doRead(InputStream is) throws IOException;
-
-    protected AbstractFileStorage(File directory) {
+    protected AbstractFileStorage(File directory, StreamSerializer streamSerializer) {
         Objects.requireNonNull(directory, "directory must not be null");
+
+        this.streamSerializer = streamSerializer;
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
         }
@@ -35,7 +36,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void doUpdate(Resume resume, File file) {
         try {
-            doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
+            streamSerializer.doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
         } catch (IOException exception) {
             throw new StorageException("Unable to write file", resume.getUuid(), exception);
         }
@@ -59,7 +60,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected Resume doGet(File file) {
         try {
-            return doRead(new BufferedInputStream(new FileInputStream(file)));
+            return streamSerializer.doRead(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException exception) {
             throw new StorageException("Unable to read file " + file.getName(), file.getName(), exception);
         }
