@@ -75,29 +75,26 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     protected List<Resume> doCopyAll() {
-        File[] files = directory.listFiles();
-        if (files == null) {
-            throw new StorageException("Invalid path to storage directory", null);
-        }
-        return Arrays.stream(files).map(this::doGet).collect(Collectors.toList());
+        return Arrays.stream(getStoredFiles()).map(this::doGet).collect(Collectors.toList());
     }
 
     @Override
     public void clear() {
-        File[] files = directory.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                doDelete(file);
-            }
+        for (File file : getStoredFiles()) {
+            doDelete(file);
         }
     }
 
     @Override
     public int size() {
-        String[] list = directory.list();
-        if (list == null) {
-            throw new StorageException("Invalid path to storage directory", null);
+        return getStoredFiles().length;
+    }
+
+    private File[] getStoredFiles() {
+        File[] files = directory.listFiles();
+        if (files == null) {
+            throw new StorageException("Invalid path to storage directory");
         }
-        return list.length;
+        return files;
     }
 }
