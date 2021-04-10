@@ -93,7 +93,7 @@ public class FileStorage extends AbstractStorage<File> {
     private File[] getStoredFiles() {
         File[] files = directory.listFiles();
         if (files == null) {
-            throw new StorageException("Invalid path to storage directory", null);
+            throw new StorageException("Invalid path to storage directory");
         }
         return files;
     }
