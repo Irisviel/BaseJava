@@ -88,7 +88,7 @@ public class DataStreamSerializer implements StreamSerializer {
                                         ))
                                 )));
             default:
-                throw new IllegalStateException();
+                throw new IllegalStateException("Unknown SectionType for serialization. sectionType=" + sectionType.ordinal() + "." + sectionType.name());
         }
     }
 
