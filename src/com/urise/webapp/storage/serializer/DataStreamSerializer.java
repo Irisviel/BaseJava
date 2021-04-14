@@ -3,9 +3,13 @@ package com.urise.webapp.storage.serializer;
 import com.urise.webapp.model.*;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
-public class DataStreamSerializer extends AbstractDataStreamSerializer {
+public class DataStreamSerializer implements StreamSerializer {
 
     @Override
     public void doWrite(Resume resume, OutputStream os) throws IOException {
@@ -39,8 +43,7 @@ public class DataStreamSerializer extends AbstractDataStreamSerializer {
                             writeCollection(dos, org.getPositions(), position -> {
                                 writeLocalDate(dos, position.getStartDate());
                                 dos.writeBoolean(position.getEndDate() != null);
-                                if (position.getEndDate() != null)
-                                {
+                                if (position.getEndDate() != null) {
                                     writeLocalDate(dos, position.getEndDate());
                                 }
                                 dos.writeUTF(position.getTitle());
@@ -75,7 +78,7 @@ public class DataStreamSerializer extends AbstractDataStreamSerializer {
                 return new TextSection(dis.readUTF());
             case ACHIEVEMENT:
             case QUALIFICATIONS:
-                return new ListSection(readList(dis,dis::readUTF));
+                return new ListSection(readList(dis, dis::readUTF));
             case EXPERIENCE:
             case EDUCATION:
                 return new OrganizationSection(
@@ -90,7 +93,50 @@ public class DataStreamSerializer extends AbstractDataStreamSerializer {
         }
     }
 
+    protected void writeLocalDate(DataOutputStream dos, LocalDate localDate) throws IOException {
+        dos.writeInt(localDate.getYear());
+        dos.writeInt(localDate.getMonth().getValue());
+    }
 
+    protected LocalDate readLocalDate(DataInputStream dis) throws IOException {
+        return LocalDate.of(dis.readInt(), dis.readInt(), 1);
+    }
 
+    protected void readItems(DataInputStream dis, ElementProcessor processor) throws IOException {
+        int size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            processor.process();
+        }
+    }
 
+    protected <T> List<T> readList(DataInputStream dis, ElementReader<T> reader) throws IOException {
+        int size = dis.readInt();
+        List<T> list = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            list.add(reader.read());
+        }
+        return list;
+    }
+
+    protected <T> void writeCollection(DataOutputStream dos, Collection<T> collection, ElementWriter<T> writer) throws IOException {
+        dos.writeInt(collection.size());
+        for (T item : collection) {
+            writer.write(item);
+        }
+    }
+
+    @FunctionalInterface
+    protected interface ElementProcessor {
+        void process() throws IOException;
+    }
+
+    @FunctionalInterface
+    protected interface ElementReader<T> {
+        T read() throws IOException;
+    }
+
+    @FunctionalInterface
+    protected interface ElementWriter<T> {
+        void write(T t) throws IOException;
+    }
 }
