@@ -43,10 +43,7 @@ public class DataStreamSerializer implements StreamSerializer {
                             dos.writeUTF(homePage.getUrl());
                             writeCollection(dos, org.getPositions(), position -> {
                                 writeLocalDate(dos, position.getStartDate());
-                                dos.writeBoolean(position.getEndDate() != null);
-                                if (position.getEndDate() != null) {
-                                    writeLocalDate(dos, position.getEndDate());
-                                }
+                                writeLocalDate(dos, position.getEndDate());
                                 dos.writeUTF(position.getTitle());
                                 dos.writeUTF(position.getDescription());
                             });
@@ -86,7 +83,7 @@ public class DataStreamSerializer implements StreamSerializer {
                         readList(dis, () -> new Organization(
                                 new Link(dis.readUTF(), dis.readUTF()),
                                 readList(dis, () -> new Organization.Position(
-                                        readLocalDate(dis), dis.readBoolean() ? readLocalDate(dis) : null, dis.readUTF(), dis.readUTF()
+                                        readLocalDate(dis), readLocalDate(dis), dis.readUTF(), dis.readUTF()
                                 ))
                         )));
             default:

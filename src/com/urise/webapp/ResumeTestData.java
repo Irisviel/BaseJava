@@ -60,7 +60,7 @@ public class ResumeTestData {
                 new Link("linkName", "linkUrl"),
                 Arrays.asList(
                         new Organization.Position(2003, Month.JANUARY, 2004, Month.JULY, "WorkFirst", "Description1"),
-                        new Organization.Position(2004, Month.SEPTEMBER, "WorkSecond", "Description2")
+                        new Organization.Position(2004, Month.SEPTEMBER, 2005, Month.DECEMBER, "WorkSecond", "Description2")
                 ));
         resume.addSection(SectionType.EXPERIENCE, new OrganizationSection(Arrays.asList(organizationWork)));
     }
