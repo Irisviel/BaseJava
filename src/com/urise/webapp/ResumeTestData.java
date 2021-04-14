@@ -60,9 +60,15 @@ public class ResumeTestData {
                 new Link("linkName", "linkUrl"),
                 Arrays.asList(
                         new Organization.Position(2003, Month.JANUARY, 2004, Month.JULY, "WorkFirst", "Description1"),
-                        new Organization.Position(2004, Month.SEPTEMBER, 2005, Month.DECEMBER, "WorkSecond", "Description2")
+                        new Organization.Position(2004, Month.SEPTEMBER, 2005, Month.DECEMBER, "WorkSecond", "Description2"),
+                        new Organization.Position(2006, Month.JANUARY, 2007, Month.FEBRUARY, "WorkThird", null)
                 ));
-        resume.addSection(SectionType.EXPERIENCE, new OrganizationSection(Arrays.asList(organizationWork)));
+        Organization organizationWork2 = new Organization(
+                new Link("linkName", null),
+                Arrays.asList(
+                        new Organization.Position(2007, Month.MARCH, 2008, Month.JUNE, "WorkFourth", "Description4")
+                ));
+        resume.addSection(SectionType.EXPERIENCE, new OrganizationSection(Arrays.asList(organizationWork, organizationWork2)));
     }
 
     public static void populateEducationSections(Resume resume) {

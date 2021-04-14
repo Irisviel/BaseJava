@@ -40,12 +40,12 @@ public class DataStreamSerializer implements StreamSerializer {
                         writeCollection(dos, ((OrganizationSection) section).getOrganizations(), org -> {
                             Link homePage = org.getHomePage();
                             dos.writeUTF(homePage.getName());
-                            dos.writeUTF(homePage.getUrl());
+                            writeNullableString(dos, homePage.getUrl());
                             writeCollection(dos, org.getPositions(), position -> {
                                 writeLocalDate(dos, position.getStartDate());
                                 writeLocalDate(dos, position.getEndDate());
                                 dos.writeUTF(position.getTitle());
-                                dos.writeUTF(position.getDescription());
+                                writeNullableString(dos, position.getDescription());
                             });
                         });
                         break;
@@ -80,12 +80,13 @@ public class DataStreamSerializer implements StreamSerializer {
             case EXPERIENCE:
             case EDUCATION:
                 return new OrganizationSection(
-                        readList(dis, () -> new Organization(
-                                new Link(dis.readUTF(), dis.readUTF()),
-                                readList(dis, () -> new Organization.Position(
-                                        readLocalDate(dis), readLocalDate(dis), dis.readUTF(), dis.readUTF()
-                                ))
-                        )));
+                        readList(dis, () ->
+                                new Organization(
+                                        new Link(dis.readUTF(), readNullableString(dis)),
+                                        readList(dis, () -> new Organization.Position(
+                                                readLocalDate(dis), readLocalDate(dis), dis.readUTF(), readNullableString(dis)
+                                        ))
+                                )));
             default:
                 throw new IllegalStateException();
         }
@@ -121,6 +122,15 @@ public class DataStreamSerializer implements StreamSerializer {
         for (T item : collection) {
             writer.write(item);
         }
+    }
+
+    private void writeNullableString(DataOutputStream dos, String value) throws IOException {
+        dos.writeUTF(value != null ? value : "");
+    }
+
+    private String readNullableString(DataInputStream dis) throws IOException {
+        String value = dis.readUTF();
+        return !"".equals(value) ? value : null;
     }
 
     @FunctionalInterface
