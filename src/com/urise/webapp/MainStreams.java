@@ -13,7 +13,7 @@ public class MainStreams {
         System.out.println("Result of minValue(): " + minValue(ints));
         System.out.println();
 
-        List<Integer> integers = Arrays.asList(5, 3, 8, 7, 0, 12);
+        List<Integer> integers = Arrays.asList(5, 3, 8, 7, 0, 13);
         System.out.println("Initial values: " + integers);
         System.out.println("Initial values sum: " + integers.stream().reduce(0, Integer::sum));
         System.out.println("Result of oddOrEven(): " + oddOrEven(integers));
@@ -28,8 +28,7 @@ public class MainStreams {
 
     private static List<Integer> oddOrEven(List<Integer> integers) {
         int sum = integers.stream().reduce(0, Integer::sum);
-        return sum % 2 == 0 ?
-                integers.stream().filter(x -> x % 2 != 0).collect(Collectors.toList()) :
-                integers.stream().filter(x -> x % 2 == 0).collect(Collectors.toList());
+        System.out.println(sum % 2 == 0 ? "Sum is even. Filtering only odd numbers from array:" : "Sum is odd. Filtering only even numbers from array:");
+        return integers.stream().filter(x -> sum % 2 != x % 2).collect(Collectors.toList());
     }
 }
