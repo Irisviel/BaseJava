@@ -29,6 +29,6 @@ public class MainStreams {
     private static List<Integer> oddOrEven(List<Integer> integers) {
         int sum = integers.stream().reduce(0, Integer::sum);
         System.out.println(sum % 2 == 0 ? "Sum is even. Filtering only odd numbers from array:" : "Sum is odd. Filtering only even numbers from array:");
-        return integers.stream().filter(x -> (sum % 2 == 0) ^ (x % 2 == 0)).collect(Collectors.toList());
+        return integers.stream().filter(x -> sum % 2 != x % 2).collect(Collectors.toList());
     }
 }
