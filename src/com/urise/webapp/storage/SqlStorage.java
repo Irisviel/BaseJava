@@ -44,9 +44,10 @@ public class SqlStorage implements Storage {
     public void update(Resume r) {
         sqlHelper.execute("UPDATE resume r SET full_name = ? WHERE r.uuid =?", ps -> {
             ps.setString(1, r.getFullName());
-            ps.setString(2, r.getUuid());
+            String uuid = r.getUuid();
+            ps.setString(2, uuid);
             if (ps.executeUpdate() == 0) {
-                throw new NotExistStorageException(r.getUuid());
+                throw new NotExistStorageException(uuid);
             }
             return null;
         });
