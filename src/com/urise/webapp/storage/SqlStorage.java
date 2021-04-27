@@ -35,9 +35,9 @@ public class SqlStorage implements Storage {
     @Override
     public Resume get(String uuid) {
         return sqlHelper.execute("" +
-                        "SELECT * FROM resume r " +
-                        "LEFT JOIN contact c " +
-                        "ON r.uuid = c.resume_uuid " +
+                        "SELECT * FROM resume r\n" +
+                        "LEFT JOIN contact c\n" +
+                        "ON r.uuid = c.resume_uuid\n" +
                         "WHERE r.uuid =?",
                 ps -> {
                     ps.setString(1, uuid);
@@ -127,8 +127,8 @@ public class SqlStorage implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         return sqlHelper.execute("" +
-                        "SELECT * FROM resume r " +
-                        "LEFT JOIN contact ON r.uuid = contact.resume_uuid " +
+                        "SELECT * FROM resume r\n" +
+                        "LEFT JOIN contact ON r.uuid = contact.resume_uuid\n" +
                         "ORDER BY full_name,uuid", ps -> {
                     ResultSet rs = ps.executeQuery();
                     Map<String, Resume> map = new LinkedHashMap<>();
