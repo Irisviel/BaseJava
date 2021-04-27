@@ -9,6 +9,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +37,7 @@ public class SqlStorage implements Storage {
         return sqlHelper.execute("" +
                         "SELECT * FROM resume r " +
                         "LEFT JOIN contact c " +
-                        "ON r.uuid = c.resume_uuid" +
+                        "ON r.uuid = c.resume_uuid " +
                         "WHERE r.uuid =?",
                 ps -> {
                     ps.setString(1, uuid);
@@ -56,6 +57,29 @@ public class SqlStorage implements Storage {
 
     @Override
     public void update(Resume r) {
+        sqlHelper.transactionalExecute(conn -> {
+            try (PreparedStatement ps = conn.prepareStatement("UPDATE resume r SET full_name = ? WHERE r.uuid =?")) {
+                ps.setString(1, r.getFullName());
+                ps.setString(2, r.getUuid());
+                if (ps.executeUpdate() == 0) {
+                    throw new NotExistStorageException(r.getUuid());
+                }
+            }
+            try (PreparedStatement ps = conn.prepareStatement("DELETE FROM contact WHERE contact.resume_uuid=?")) {
+                ps.setString(1, r.getUuid());
+                ps.execute();
+            }
+            try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)")) {
+                for (Map.Entry<ContactType, String> contact : r.getContacts().entrySet()) {
+                    ps.setString(1, r.getUuid());
+                    ps.setString(2, contact.getKey().name());
+                    ps.setString(3, contact.getValue());
+                    ps.addBatch();
+                }
+                ps.executeBatch();
+            }
+            return null;
+        });
         sqlHelper.execute("UPDATE resume r SET full_name = ? WHERE r.uuid =?", ps -> {
             ps.setString(1, r.getFullName());
             String uuid = r.getUuid();
@@ -78,8 +102,8 @@ public class SqlStorage implements Storage {
                     try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)")) {
                         for (Map.Entry<ContactType, String> contact : r.getContacts().entrySet()) {
                             ps.setString(1, r.getUuid());
-                            ps.setString(1, contact.getKey().name());
-                            ps.setString(1, contact.getValue());
+                            ps.setString(2, contact.getKey().name());
+                            ps.setString(3, contact.getValue());
                             ps.addBatch();
                         }
                         ps.executeBatch();
@@ -102,14 +126,28 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return sqlHelper.execute("SELECT * FROM resume r ORDER BY full_name,uuid", ps -> {
-            ResultSet rs = ps.executeQuery();
-            List<Resume> resumes = new ArrayList<>();
-            while (rs.next()) {
-                resumes.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
-            }
-            return resumes;
-        });
+        return sqlHelper.execute("" +
+                        "SELECT * FROM resume r " +
+                        "LEFT JOIN contact ON r.uuid = contact.resume_uuid " +
+                        "ORDER BY full_name,uuid", ps -> {
+                    ResultSet rs = ps.executeQuery();
+                    Map<String, Resume> map = new LinkedHashMap<>();
+                    while (rs.next()) {
+                        String uuid = rs.getString("uuid");
+                        Resume resume = map.get(uuid);
+                        if (resume == null) {
+                            resume = new Resume(uuid, rs.getString("full_name"));
+                            map.put(uuid, resume);
+                        }
+                        String value = rs.getString("value");
+                        if (value != null) {
+                            resume.addContact(ContactType.valueOf(rs.getString("type")), value);
+                        }
+
+                    }
+                    return new ArrayList<>(map.values());
+                }
+        );
     }
 
     @Override
