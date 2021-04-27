@@ -123,9 +123,19 @@ public class SqlStorage implements Storage {
     }
 
     private void insertContacts(Connection conn, Resume r) throws SQLException {
+        boolean resumeExists;
+        String uuid = r.getUuid();
+        try (PreparedStatement ps = conn.prepareStatement("SELECT uuid FROM resume WHERE uuid =?")) {
+            ps.setString(1, uuid);
+            ResultSet rs = ps.executeQuery();
+            resumeExists = rs.next();
+        }
+        if (!resumeExists) {
+            throw new NotExistStorageException(uuid);
+        }
         try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)")) {
             for (Map.Entry<ContactType, String> contact : r.getContacts().entrySet()) {
-                ps.setString(1, r.getUuid());
+                ps.setString(1, uuid);
                 ps.setString(2, contact.getKey().name());
                 ps.setString(3, contact.getValue());
                 ps.addBatch();
