@@ -56,22 +56,14 @@ public class SqlStorage implements Storage {
         sqlHelper.transactionalExecute(conn -> {
             try (PreparedStatement ps = conn.prepareStatement("UPDATE resume r SET full_name = ? WHERE r.uuid =?")) {
                 ps.setString(1, r.getFullName());
-                ps.setString(2, r.getUuid());
+                String uuid = r.getUuid();
+                ps.setString(2, uuid);
                 if (ps.executeUpdate() == 0) {
-                    throw new NotExistStorageException(r.getUuid());
+                    throw new NotExistStorageException(uuid);
                 }
             }
             deleteContacts(conn, r);
-            insertContact(conn, r);
-            return null;
-        });
-        sqlHelper.execute("UPDATE resume r SET full_name = ? WHERE r.uuid =?", ps -> {
-            ps.setString(1, r.getFullName());
-            String uuid = r.getUuid();
-            ps.setString(2, uuid);
-            if (ps.executeUpdate() == 0) {
-                throw new NotExistStorageException(uuid);
-            }
+            insertContacts(conn, r);
             return null;
         });
     }
@@ -84,7 +76,7 @@ public class SqlStorage implements Storage {
                 ps.setString(2, r.getFullName());
                 ps.execute();
             }
-            insertContact(conn, r);
+            insertContacts(conn, r);
             return null;
         });
     }
@@ -130,7 +122,7 @@ public class SqlStorage implements Storage {
         });
     }
 
-    private void insertContact(Connection conn, Resume r) throws SQLException {
+    private void insertContacts(Connection conn, Resume r) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)")) {
             for (Map.Entry<ContactType, String> contact : r.getContacts().entrySet()) {
                 ps.setString(1, r.getUuid());
