@@ -151,7 +151,8 @@ public class SqlStorage implements Storage {
 
     private void addContact(ResultSet rs, Resume r) throws SQLException {
         String value = rs.getString("value");
-        ContactType type = ContactType.valueOf(rs.getString("type"));
-        r.addContact(type, value);
+        if (value != null) {
+            r.addContact(ContactType.valueOf(rs.getString("type")), value);
+        }
     }
 }
