@@ -1,6 +1,7 @@
 package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.NotExistStorageException;
+import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.ContactType;
 import com.urise.webapp.model.Resume;
 import com.urise.webapp.sql.SqlHelper;
@@ -123,15 +124,13 @@ public class SqlStorage implements Storage {
     }
 
     private void insertContacts(Connection conn, Resume r) throws SQLException {
-        boolean resumeExists;
         String uuid = r.getUuid();
-        try (PreparedStatement ps = conn.prepareStatement("SELECT uuid FROM resume WHERE uuid =?")) {
+        try (PreparedStatement ps = conn.prepareStatement("SELECT id FROM contact WHERE resume_uuid =? LIMIT 1")) {
             ps.setString(1, uuid);
             ResultSet rs = ps.executeQuery();
-            resumeExists = rs.next();
-        }
-        if (!resumeExists) {
-            throw new NotExistStorageException(uuid);
+            if (rs.next()) {
+                throw new StorageException("Resume with uuid " + uuid + " already has contacts.");
+            }
         }
         try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)")) {
             for (Map.Entry<ContactType, String> contact : r.getContacts().entrySet()) {
