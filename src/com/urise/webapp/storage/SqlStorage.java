@@ -173,7 +173,7 @@ public class SqlStorage implements Storage {
     }
 
     private void deleteSections(Connection conn, Resume r) throws SQLException {
-        deleteAttributes(conn, r, "DELETE FROM section WHERE contact.resume_uuid=?");
+        deleteAttributes(conn, r, "DELETE FROM section WHERE section.resume_uuid=?");
     }
 
     private void deleteAttributes(Connection conn, Resume r, String sql) throws SQLException {
