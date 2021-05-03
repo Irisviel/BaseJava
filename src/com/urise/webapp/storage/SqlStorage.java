@@ -161,7 +161,7 @@ public class SqlStorage implements Storage {
             for (Map.Entry<SectionType, AbstractSection> contact : sections.entrySet()) {
                 ps.setString(1, uuid);
                 ps.setString(2, contact.getKey().name());
-                ps.setString(3, JsonParser.write(contact.getValue()));
+                ps.setString(3, JsonParser.write(contact.getValue(), AbstractSection.class));
                 ps.addBatch();
             }
             ps.executeBatch();
