@@ -30,8 +30,8 @@ public class ResumeTestData {
         populateContacts(resume);
         populateTextSections(resume);
         populateListSections(resume);
-        populateWorkSection(resume);
-        populateEducationSections(resume);
+/*        populateWorkSection(resume);
+        populateEducationSections(resume);*/
         return resume;
     }
 

@@ -1,18 +1,12 @@
 package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.NotExistStorageException;
-import com.urise.webapp.model.AbstractSection;
-import com.urise.webapp.model.ContactType;
-import com.urise.webapp.model.Resume;
-import com.urise.webapp.model.SectionType;
+import com.urise.webapp.model.*;
 import com.urise.webapp.sql.SqlHelper;
-import com.urise.webapp.util.JsonParser;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SqlStorage implements Storage {
     public final SqlHelper sqlHelper;
@@ -180,8 +174,24 @@ public class SqlStorage implements Storage {
         try (PreparedStatement ps = conn.prepareStatement("INSERT INTO section (resume_uuid, type, content) VALUES (?,?,?)")) {
             for (Map.Entry<SectionType, AbstractSection> section : sections.entrySet()) {
                 ps.setString(1, uuid);
-                ps.setString(2, section.getKey().name());
-                ps.setString(3, JsonParser.write(section.getValue(), AbstractSection.class));
+                SectionType sectionType = section.getKey();
+                ps.setString(2, sectionType.name());
+                AbstractSection sectionObject = section.getValue();
+                switch (sectionType) {
+                    case PERSONAL:
+                    case OBJECTIVE:
+                        ps.setString(3, ((TextSection) sectionObject).getContent());
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        ps.setString(3, String.join("\n", ((ListSection) sectionObject).getItems()));
+                        break;
+                    case EXPERIENCE:
+                    case EDUCATION:
+                        throw new NotImplementedException();
+                    default:
+                        throw new IllegalStateException("Unknown SectionType. sectionType=" + sectionType.ordinal() + "." + sectionType.name());
+                }
                 ps.addBatch();
             }
             ps.executeBatch();
@@ -214,7 +224,21 @@ public class SqlStorage implements Storage {
         String content = rs.getString("content");
         if (content != null) {
             SectionType type = SectionType.valueOf(rs.getString("type"));
-            r.addSection(type, JsonParser.read(content, AbstractSection.class));
+            switch (type) {
+                case PERSONAL:
+                case OBJECTIVE:
+                    r.addSection(type, new TextSection(content));
+                    break;
+                case ACHIEVEMENT:
+                case QUALIFICATIONS:
+                    r.addSection(type, new ListSection(Arrays.asList(content.split("\\r?\\n"))));
+                    break;
+                case EXPERIENCE:
+                case EDUCATION:
+                    throw new NotImplementedException();
+                default:
+                    throw new IllegalStateException("Unknown SectionType. sectionType=" + type.ordinal() + "." + type.name());
+            }
         }
     }
 }
