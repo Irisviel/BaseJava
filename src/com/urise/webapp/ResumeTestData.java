@@ -28,10 +28,10 @@ public class ResumeTestData {
     public static Resume newResume(String uuid, String fullName) {
         Resume resume = new Resume(uuid, fullName);
         populateContacts(resume);
-/*        populateTextSections(resume);
+        populateTextSections(resume);
         populateListSections(resume);
         populateWorkSection(resume);
-        populateEducationSections(resume);*/
+        populateEducationSections(resume);
         return resume;
     }
 
