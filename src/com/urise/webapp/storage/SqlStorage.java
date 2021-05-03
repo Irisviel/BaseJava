@@ -124,11 +124,12 @@ public class SqlStorage implements Storage {
     }
 
     private void insertContacts(Connection conn, Resume r) throws SQLException {
-        if (r.getContacts().isEmpty()) return;
+        Map<ContactType, String> contacts = r.getContacts();
+        if (contacts.isEmpty()) return;
 
         String uuid = r.getUuid();
         try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)")) {
-            for (Map.Entry<ContactType, String> contact : r.getContacts().entrySet()) {
+            for (Map.Entry<ContactType, String> contact : contacts.entrySet()) {
                 ps.setString(1, uuid);
                 ps.setString(2, contact.getKey().name());
                 ps.setString(3, contact.getValue());
