@@ -6,7 +6,7 @@ import com.urise.webapp.model.ContactType;
 import com.urise.webapp.model.Resume;
 import com.urise.webapp.model.SectionType;
 import com.urise.webapp.sql.SqlHelper;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import com.urise.webapp.util.JsonParser;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -161,9 +161,7 @@ public class SqlStorage implements Storage {
             for (Map.Entry<SectionType, AbstractSection> contact : sections.entrySet()) {
                 ps.setString(1, uuid);
                 ps.setString(2, contact.getKey().name());
-                throw new NotImplementedException();
-                // TODO:
-                //  ps.setString(3, toJSON(contact.getValue()));
+                ps.setString(3, JsonParser.write(contact.getValue()));
                 ps.addBatch();
             }
             ps.executeBatch();
@@ -196,9 +194,7 @@ public class SqlStorage implements Storage {
         String content = rs.getString("content");
         if (content != null) {
             SectionType type = SectionType.valueOf(rs.getString("type"));
-            throw new NotImplementedException();
-            // TODO:
-            //  r.addSection(type, fromJSON(content));
+            r.addSection(type, JsonParser.read(content, AbstractSection.class));
         }
     }
 }
