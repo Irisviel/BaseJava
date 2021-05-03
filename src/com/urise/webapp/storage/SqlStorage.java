@@ -178,10 +178,10 @@ public class SqlStorage implements Storage {
 
         String uuid = r.getUuid();
         try (PreparedStatement ps = conn.prepareStatement("INSERT INTO section (resume_uuid, type, content) VALUES (?,?,?)")) {
-            for (Map.Entry<SectionType, AbstractSection> contact : sections.entrySet()) {
+            for (Map.Entry<SectionType, AbstractSection> section : sections.entrySet()) {
                 ps.setString(1, uuid);
-                ps.setString(2, contact.getKey().name());
-                ps.setString(3, JsonParser.write(contact.getValue(), AbstractSection.class));
+                ps.setString(2, section.getKey().name());
+                ps.setString(3, JsonParser.write(section.getValue(), AbstractSection.class));
                 ps.addBatch();
             }
             ps.executeBatch();
