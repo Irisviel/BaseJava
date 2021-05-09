@@ -10,7 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.Writer;
+
+import static com.urise.webapp.util.EnumUtil.getEnumFromString;
 
 public class ResumeServlet extends HttpServlet {
 
@@ -27,7 +28,24 @@ public class ResumeServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
-        request.setAttribute("resumes", storage.getAllSorted());
-        request.getRequestDispatcher("/WEB-INF/jsp/list.jsp").forward(request, response);
+        String paramUuid = request.getParameter("uuid");
+        String paramAction = request.getParameter("action");
+        Action action = getEnumFromString(Action.class, paramAction);
+        if (action == null) {
+            request.setAttribute("resumes", storage.getAllSorted());
+            request.getRequestDispatcher("/WEB-INF/jsp/list.jsp").forward(request, response);
+            return;
+        }
+        Resume resume;
+        switch (action) {
+            case VIEW:
+                resume = storage.get(paramUuid);
+                break;
+            default:
+                throw new IllegalArgumentException("Illegal action = " + paramAction);
+        }
+        request.setAttribute("resume", resume);
+        request.getRequestDispatcher(Action.VIEW.equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
+                .forward(request, response);
     }
 }

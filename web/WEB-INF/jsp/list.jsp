@@ -1,3 +1,4 @@
+<%@ page import="com.urise.webapp.model.ContactType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -18,8 +19,9 @@
         <c:forEach items="${resumes}" var="resume">
             <jsp:useBean id="resume" type="com.urise.webapp.model.Resume"/>
             <tr>
-                <td><a href="resume?uuid=${resume.uuid}">${resume.fullName}</a></td>
-                <td>${resume.getContact(ContactType.MAIL)}</td>
+                <td><a href="resume?uuid=${resume.uuid}&action=view">${resume.fullName}</a></td>
+                <td><%=ContactType.MAIL.toHtml(resume.getContact(ContactType.MAIL))%>
+                </td>
             </tr>
         </c:forEach>
     </table>

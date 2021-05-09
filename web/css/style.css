@@ -1,14 +1,26 @@
 header {
-    background: none repeat scroll 0 0 #A6C9E2;
-    color: #2E6E9E;
-    font-size: 20px;
-    padding: 5px 20px;
+    background: none repeat scroll 0 0 #E2E2E2;
+    color: #333333;
+    font-size: 30px;
+    padding: 20px 0 10px 10px;
+}
+
+header a {
+    outline: none;
+    text-decoration: none;
+    color: #333333;
 }
 
 footer {
-    background: none repeat scroll 0 0 #A6C9E2;
-    color: #2E6E9E;
+    background: none repeat scroll 0 0 #E2E2E2;
+    color: #333333;
     font-size: 20px;
-    padding: 5px 20px;
+    padding: 5px 10px;
     margin: 20px 0;
+}
+
+footer a {
+    outline: none;
+    text-decoration: none;
+    color: #333333;
 }
