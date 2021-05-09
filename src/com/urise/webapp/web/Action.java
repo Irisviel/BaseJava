@@ -1,5 +1,8 @@
 package com.urise.webapp.web;
 
 public enum Action {
-    VIEW;
+    VIEW,
+    ADD,
+    DELETE,
+    EDIT;
 }

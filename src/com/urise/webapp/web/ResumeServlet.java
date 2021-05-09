@@ -39,6 +39,7 @@ public class ResumeServlet extends HttpServlet {
         Resume resume;
         switch (action) {
             case VIEW:
+            case EDIT:
                 resume = storage.get(paramUuid);
                 break;
             default:
