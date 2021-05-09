@@ -27,35 +27,7 @@ public class ResumeServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html; charset=UTF-8");
-        String name = request.getParameter("name");
-        Writer writer = response.getWriter();
-        writer.write("" +
-                "<!doctype html>\n" +
-                "\n" +
-                "<html lang=\"en\">\n" +
-                "<head>\n" +
-                "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=\"utf-8\">\n" +
-                "  <title>Список всех резюме</title>\n" +
-                "  <meta name=\"description\" content=\"Список всех резюме\">\n" +
-                "</head>\n" +
-                "<body>\n" +
-                "<table border=\"1\" cellpadding=\"8\" cellspacing=\"0\">\n"
-        );
-        for (Resume resume : storage.getAllSorted()) {
-            writer.write("" +
-                    "<tr>\n" +
-                    "<td>" + resume.getUuid() + "</td>\n" +
-                    "<td>" + resume.getFullName() + "</td>\n" +
-                    "</tr>\n"
-            );
-        }
-        writer.write("" +
-                "</table>\n" +
-                "</body>\n" +
-                "</html>"
-        );
+        request.setAttribute("resumes", storage.getAllSorted());
+        request.getRequestDispatcher("/WEB-INF/jsp/list.jsp").forward(request, response);
     }
 }
