@@ -38,6 +38,10 @@ public class ResumeServlet extends HttpServlet {
         }
         Resume resume;
         switch (action) {
+            case DELETE:
+                storage.delete(paramUuid);
+                response.sendRedirect("resume");
+                return;
             case VIEW:
             case EDIT:
                 resume = storage.get(paramUuid);
