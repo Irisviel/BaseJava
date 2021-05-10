@@ -66,3 +66,15 @@ a[href*="github."] {
     padding-left: 20px !important;
     background: url(../img/gh.png) no-repeat center left;
 }
+
+.linkAdd {
+    padding-left: 20px !important;
+    padding-bottom: 0px !important;
+    background: url(../img/add.png) no-repeat center left;
+    margin: 10px 0
+}
+
+.linkAdd a {
+    outline: none;
+    text-decoration: none;
+}

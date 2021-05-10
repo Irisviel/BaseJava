@@ -28,8 +28,16 @@ public class ResumeServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
-        Resume resume = storage.get(uuid);
-        resume.setFullName(fullName);
+
+        final boolean isCreate = (uuid == null || uuid.length() == 0);
+        Resume resume;
+        if (isCreate) {
+            resume = new Resume(fullName);
+        } else {
+            resume = storage.get(uuid);
+            resume.setFullName(fullName);
+        }
+
         for (ContactType type : ContactType.values()) {
             String contactValue = request.getParameter(type.name());
             if (contactValue != null && contactValue.trim().length() != 0) {
@@ -38,7 +46,12 @@ public class ResumeServlet extends HttpServlet {
                 resume.getContacts().remove(type);
             }
         }
-        storage.update(resume);
+
+        if (isCreate) {
+            storage.save(resume);
+        } else {
+            storage.update(resume);
+        }
         response.sendRedirect("resume");
     }
 
@@ -57,6 +70,9 @@ public class ResumeServlet extends HttpServlet {
                 storage.delete(paramUuid);
                 response.sendRedirect("resume");
                 return;
+            case ADD:
+                resume = Resume.EMPTY;
+                break;
             case VIEW:
             case EDIT:
                 resume = storage.get(paramUuid);

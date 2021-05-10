@@ -11,6 +11,9 @@
 <body>
 <jsp:include page="fragments/header.jsp"/>
 <section>
+    <div class="linkAdd">
+        <a href="resume?action=add">Создать</a>
+    </div>
     <table border="1" cellpadding="8" cellspacing="0">
         <tr>
             <th>Имя</th>
