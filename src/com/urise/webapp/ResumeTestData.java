@@ -36,23 +36,23 @@ public class ResumeTestData {
     }
 
     public static void populateContacts(Resume resume) {
-        resume.addContact(ContactType.PHONE, "1234567890");
-        resume.addContact(ContactType.SKYPE, "SkypeName");
-        resume.addContact(ContactType.GITHUB, "GithubLink");
-        resume.addContact(ContactType.HOME_PAGE, "HomePage");
-        resume.addContact(ContactType.LINKEDIN, "LinkedInLink");
-        resume.addContact(ContactType.MAIL, "Mail");
-        resume.addContact(ContactType.STACKOVERFLOW, "StackoverflowProfileLink");
+        resume.setContact(ContactType.PHONE, "1234567890");
+        resume.setContact(ContactType.SKYPE, "SkypeName");
+        resume.setContact(ContactType.GITHUB, "GithubLink");
+        resume.setContact(ContactType.HOME_PAGE, "HomePage");
+        resume.setContact(ContactType.LINKEDIN, "LinkedInLink");
+        resume.setContact(ContactType.MAIL, "Mail");
+        resume.setContact(ContactType.STACKOVERFLOW, "StackoverflowProfileLink");
     }
 
     public static void populateTextSections(Resume resume) {
-        resume.addSection(SectionType.OBJECTIVE, new TextSection("Employer."));
-        resume.addSection(SectionType.PERSONAL, new TextSection("Personal qualities come here."));
+        resume.setSection(SectionType.OBJECTIVE, new TextSection("Employer."));
+        resume.setSection(SectionType.PERSONAL, new TextSection("Personal qualities come here."));
     }
 
     public static void populateListSections(Resume resume) {
-        resume.addSection(SectionType.ACHIEVEMENT, new ListSection(Arrays.asList("Achievement1", "Achievement2")));
-        resume.addSection(SectionType.QUALIFICATIONS, new ListSection(Arrays.asList("Qualification1", "Qualification2")));
+        resume.setSection(SectionType.ACHIEVEMENT, new ListSection(Arrays.asList("Achievement1", "Achievement2")));
+        resume.setSection(SectionType.QUALIFICATIONS, new ListSection(Arrays.asList("Qualification1", "Qualification2")));
     }
 
     public static void populateWorkSection(Resume resume) {
@@ -68,7 +68,7 @@ public class ResumeTestData {
                 Arrays.asList(
                         new Organization.Position(2007, Month.MARCH, 2008, Month.JUNE, "WorkFourth", "Description4")
                 ));
-        resume.addSection(SectionType.EXPERIENCE, new OrganizationSection(Arrays.asList(organizationWork, organizationWork2)));
+        resume.setSection(SectionType.EXPERIENCE, new OrganizationSection(Arrays.asList(organizationWork, organizationWork2)));
     }
 
     public static void populateEducationSections(Resume resume) {
@@ -77,6 +77,6 @@ public class ResumeTestData {
                 Collections.singletonList(
                         new Organization.Position(2002, Month.JANUARY, 2002, Month.DECEMBER, "PositionTitle", "PositionDescription")
                 ));
-        resume.addSection(SectionType.EDUCATION, new OrganizationSection(Arrays.asList(organizationEdu)));
+        resume.setSection(SectionType.EDUCATION, new OrganizationSection(Arrays.asList(organizationEdu)));
     }
 }

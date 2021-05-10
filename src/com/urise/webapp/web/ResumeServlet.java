@@ -41,7 +41,7 @@ public class ResumeServlet extends HttpServlet {
         for (ContactType type : ContactType.values()) {
             String contactValue = request.getParameter(type.name());
             if (contactValue != null && contactValue.trim().length() != 0) {
-                resume.addContact(type, contactValue);
+                resume.setContact(type, contactValue);
             } else {
                 resume.getContacts().remove(type);
             }
