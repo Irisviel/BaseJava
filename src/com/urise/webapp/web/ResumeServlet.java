@@ -4,6 +4,7 @@ import com.urise.webapp.Config;
 import com.urise.webapp.model.ContactType;
 import com.urise.webapp.model.Resume;
 import com.urise.webapp.storage.Storage;
+import com.urise.webapp.util.HtmlUtil;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -40,10 +41,10 @@ public class ResumeServlet extends HttpServlet {
 
         for (ContactType type : ContactType.values()) {
             String contactValue = request.getParameter(type.name());
-            if (contactValue != null && contactValue.trim().length() != 0) {
-                resume.setContact(type, contactValue);
-            } else {
+            if (HtmlUtil.isEmpty(contactValue)) {
                 resume.getContacts().remove(type);
+            } else {
+                resume.setContact(type, contactValue);
             }
         }
 
