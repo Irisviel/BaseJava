@@ -73,6 +73,18 @@ public class ResumeServlet extends HttpServlet {
                                             Arrays.stream(value.split("\\n"))
                                                     .filter(x -> !HtmlUtil.isEmpty(x)).toArray(String[]::new)));
                             break;
+                        case EXPERIENCE:
+                        case EDUCATION:
+                            List<Organization> organizations = new ArrayList<>();
+                            String[] urls = request.getParameterValues(type.name() + "url");
+                            for (int i = 0; i < values.length; i++) {
+                                String name = values[i];
+                                if (!HtmlUtil.isEmpty(name)) {
+                                    organizations.add(new Organization(new Link(name, urls[i]), new ArrayList<>()));
+                                }
+                            }
+                            resume.setSection(type, new OrganizationSection(organizations));
+                            break;
                     }
                 }
             }
