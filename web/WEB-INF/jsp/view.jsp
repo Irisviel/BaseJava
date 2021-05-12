@@ -1,4 +1,5 @@
 <%@ page import="com.urise.webapp.model.ListSection" %>
+<%@ page import="com.urise.webapp.model.OrganizationSection" %>
 <%@ page import="com.urise.webapp.model.TextSection" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -57,6 +58,24 @@
                             </ul>
                         </td>
                     </tr>
+                </c:when>
+                <c:when test="${type=='EXPERIENCE' || type=='EDUCATION'}">
+                    <c:forEach var="organization" items="<%=((OrganizationSection) section).getOrganizations()%>">
+                        <tr>
+                            <td colspan="2">
+                                <a href="${organization.homePage.url}">${organization.homePage.name}</a>
+                            </td>
+                        </tr>
+                        <c:forEach var="position" items="${organization.positions}">
+                            <jsp:useBean id="position" type="com.urise.webapp.model.Organization.Position"/>
+                            <tr>
+                                <td>${position.title}
+                                </td>
+                                <td>${position.description}
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </c:forEach>
                 </c:when>
             </c:choose>
         </c:forEach>
