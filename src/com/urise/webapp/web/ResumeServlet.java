@@ -1,6 +1,7 @@
 package com.urise.webapp.web;
 
 import com.urise.webapp.Config;
+import com.urise.webapp.exception.ValidationException;
 import com.urise.webapp.model.*;
 import com.urise.webapp.storage.Storage;
 import com.urise.webapp.util.HtmlUtil;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.urise.webapp.util.EnumUtil.getEnumFromString;
@@ -28,44 +30,55 @@ public class ResumeServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        String uuid = request.getParameter("uuid");
-        String fullName = request.getParameter("fullName");
-
-        final boolean isCreate = (uuid == null || uuid.length() == 0);
+        final boolean isCreate;
         Resume resume;
-        if (isCreate) {
-            resume = new Resume(fullName);
-        } else {
-            resume = storage.get(uuid);
-            resume.setFullName(fullName);
-        }
-
-        for (ContactType type : ContactType.values()) {
-            String contactValue = request.getParameter(type.name());
-            if (HtmlUtil.isEmpty(contactValue)) {
-                resume.getContacts().remove(type);
-            } else {
-                resume.setContact(type, contactValue);
+        try {
+            String uuid = request.getParameter("uuid");
+            String fullName = request.getParameter("fullName");
+            if (HtmlUtil.isEmpty(fullName)) {
+                throw new ValidationException("Empty field \"fullName\"");
             }
-        }
-
-        for (SectionType type : SectionType.values()) {
-            String value = request.getParameter(type.name());
-            String[] values = request.getParameterValues(type.name());
-            if (HtmlUtil.isEmpty(value) && (values == null || values.length < 2)) {
-                resume.getSections().remove(type);
+            isCreate = (uuid == null || uuid.length() == 0);
+            if (isCreate) {
+                resume = new Resume(fullName);
             } else {
-                switch (type) {
-                    case OBJECTIVE:
-                    case PERSONAL:
-                        resume.setSection(type, new TextSection(value));
-                        break;
-                    case ACHIEVEMENT:
-                    case QUALIFICATIONS:
-                        resume.setSection(type, new ListSection(value.split("\\n")));
-                        break;
+                resume = storage.get(uuid);
+                resume.setFullName(fullName);
+            }
+
+            for (ContactType type : ContactType.values()) {
+                String contactValue = request.getParameter(type.name());
+                if (HtmlUtil.isEmpty(contactValue)) {
+                    resume.getContacts().remove(type);
+                } else {
+                    resume.setContact(type, contactValue);
                 }
             }
+
+            for (SectionType type : SectionType.values()) {
+                String value = request.getParameter(type.name());
+                String[] values = request.getParameterValues(type.name());
+                if (HtmlUtil.isEmpty(value) && (values == null || values.length < 2)) {
+                    resume.getSections().remove(type);
+                } else {
+                    switch (type) {
+                        case OBJECTIVE:
+                        case PERSONAL:
+                            resume.setSection(type, new TextSection(value));
+                            break;
+                        case ACHIEVEMENT:
+                        case QUALIFICATIONS:
+                            resume.setSection(type,
+                                    new ListSection(
+                                            Arrays.stream(value.split("\\n"))
+                                                    .filter(x -> !HtmlUtil.isEmpty(x)).toArray(String[]::new)));
+                            break;
+                    }
+                }
+            }
+        } catch (ValidationException e) {
+            response.sendError(400, "Invalid request data: " + e.getMessage());
+            return;
         }
 
         if (isCreate) {
