@@ -99,7 +99,7 @@ public class ResumeServlet extends HttpServlet {
                                                     ));
                                         }
                                     }
-                                    organizations.add(new Organization(new Link(name, urls[i]), new ArrayList<>()));
+                                    organizations.add(new Organization(new Link(name, urls[i]), positions));
                                 }
                             }
                             resume.setSection(type, new OrganizationSection(organizations));
