@@ -4,6 +4,7 @@ import com.urise.webapp.Config;
 import com.urise.webapp.exception.ValidationException;
 import com.urise.webapp.model.*;
 import com.urise.webapp.storage.Storage;
+import com.urise.webapp.util.DateUtil;
 import com.urise.webapp.util.HtmlUtil;
 
 import javax.servlet.ServletConfig;
@@ -71,7 +72,8 @@ public class ResumeServlet extends HttpServlet {
                             resume.setSection(type,
                                     new ListSection(
                                             Arrays.stream(value.split("\\n"))
-                                                    .filter(x -> !HtmlUtil.isEmpty(x)).toArray(String[]::new)));
+                                                    .filter(x -> !HtmlUtil.isEmpty(x)).toArray(String[]::new)
+                                    ));
                             break;
                         case EXPERIENCE:
                         case EDUCATION:
@@ -80,6 +82,23 @@ public class ResumeServlet extends HttpServlet {
                             for (int i = 0; i < values.length; i++) {
                                 String name = values[i];
                                 if (!HtmlUtil.isEmpty(name)) {
+                                    List<Organization.Position> positions = new ArrayList<>();
+                                    String prefix = type.name() + i;
+                                    String[] titles = request.getParameterValues(prefix + "title");
+                                    String[] descriptions = request.getParameterValues(prefix + "description");
+                                    String[] startDates = request.getParameterValues(prefix + "startDate");
+                                    String[] endDates = request.getParameterValues(prefix + "endDate");
+                                    for (int j = 0; j < titles.length; j++) {
+                                        if (!HtmlUtil.isEmpty(titles[j])) {
+                                            positions.add(
+                                                    new Organization.Position(
+                                                            DateUtil.parse(startDates[j]),
+                                                            DateUtil.parse(endDates[j]),
+                                                            titles[j],
+                                                            descriptions[j]
+                                                    ));
+                                        }
+                                    }
                                     organizations.add(new Organization(new Link(name, urls[i]), new ArrayList<>()));
                                 }
                             }
