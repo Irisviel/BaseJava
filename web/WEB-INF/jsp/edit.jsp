@@ -16,6 +16,10 @@
 <jsp:include page="fragments/header.jsp"/>
 <section>
     <form method="post" action="resume" enctype="application/x-www-form-urlencoded">
+        <jsp:useBean id="errors" class="java.util.ArrayList" scope="request"/>
+        <c:forEach var="error" items="<%=errors%>">
+            <span class="error">${error}</span>
+        </c:forEach>
         <input type="hidden" name="uuid" value="${resume.uuid}">
         <dl>
             <dt>Имя:</dt>

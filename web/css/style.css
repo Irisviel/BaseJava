@@ -78,3 +78,7 @@ a[href*="github."] {
     outline: none;
     text-decoration: none;
 }
+
+.error {
+    color: #FF0000;
+}

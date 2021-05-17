@@ -32,6 +32,7 @@ public class ResumeServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         final boolean isCreate;
+        List<String> errors = new ArrayList<>();
         Resume resume;
         try {
             String uuid = request.getParameter("uuid");
@@ -108,7 +109,10 @@ public class ResumeServlet extends HttpServlet {
                 }
             }
         } catch (ValidationException e) {
-            response.sendError(400, "Invalid request data: " + e.getMessage());
+            errors.add("Previous request failed with exception: " + e.getMessage());
+            request.setAttribute("errors", errors);
+            request.setAttribute("resume", Resume.EMPTY);
+            request.getRequestDispatcher("/WEB-INF/jsp/edit.jsp").forward(request, response);
             return;
         }
 
